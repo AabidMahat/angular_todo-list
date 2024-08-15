@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import confetti from 'canvas-confetti';
 
 interface Task {
   id: string;
@@ -36,11 +37,19 @@ export class TasksService {
   ];
 
   constructor() {
-    const tasks = localStorage.getItem('task');
+    const tasks = localStorage.getItem('tasks');
 
     if (tasks) {
       this.tasks = JSON.parse(tasks);
     }
+  }
+  private celebrate() {
+    confetti({
+      particleCount: 150,
+      spread: 180,
+      origin: { y: 0.6 },
+      colors: ['#FF4500', '#008080', '#FFD700'],
+    });
   }
 
   getUserTasks(userId: string) {
@@ -56,11 +65,13 @@ export class TasksService {
       dueDate: task.dueDate,
     });
     this.saveTasks();
+    this.celebrate();
   }
 
   removeTask(id: string) {
     this.tasks = this.tasks.filter((task) => task.id !== id);
     this.saveTasks();
+    this.celebrate();
   }
 
   private saveTasks() {
